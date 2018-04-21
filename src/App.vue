@@ -69,9 +69,22 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+/* ====================*/
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+html, body {
+  height: 100%;
+}
 #app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    background-image: url('./assets/bg-phone.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: 'Ubuntu', sans-serif;
+    height: 100%;
 }
 #app {
   padding: 0 5px;

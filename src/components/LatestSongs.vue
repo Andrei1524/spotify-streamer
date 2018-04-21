@@ -49,6 +49,11 @@ export default {
 
 <style lang="scss" scoped>
     .latest-songs {
+        display: flex;
+        flex-direction: column;
         background: #00000024;
+        padding: 5px;
+        height: 380px;
+        overflow: auto;
     }
 </style>

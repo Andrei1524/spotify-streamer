@@ -57,19 +57,6 @@ export default {
 
 <style lang="scss">
 /* ========================*/
-body {
-    margin: 0;
-    background-image: url('../assets/bg-phone.jpg');
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    font-family: 'Ubuntu', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-html, body {
-  height: 100%;
-}
 
 #app {
   padding: 0 5px;
