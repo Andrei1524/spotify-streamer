@@ -1,6 +1,6 @@
 <template>
   <div class="player" v-if="this.$store.state.current_playing">
-      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready"></youtube>
+      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready" :player-vars="{autoplay: 1}"></youtube>
       <div class="player-up">
         <div class="ctrls-sg-name-artist">
           <div class="sg-name-artist">
@@ -23,7 +23,7 @@
 
             <div class="vlm">
                 <span><i class="fas fa-volume-up"></i></span>
-                <span class="vlm-indicator"></span>
+                <input type="range" min="0" max="100" step="1" v-model="input_volume" v-on:change="changeVolume" class="vlm-indicator">
             </div>
         </div>
       </div>
@@ -39,6 +39,7 @@ import { EventBus } from '../event-bus'
 export default {
     data() {
         return {
+            input_volume: 100
         }
     },
     methods: {
@@ -69,6 +70,9 @@ export default {
                 this.player.pauseVideo()
                 this.$store.dispatch('setIsPlaying', false)
             }
+        },
+        changeVolume() {
+            this.player.setVolume(this.input_volume)
         }
     },
     computed: {
@@ -98,13 +102,16 @@ export default {
         }
     },
     mounted() {
+        this.ready()
         EventBus.$on('play_song', () => {
             this.player.playVideo()
+            console.log(this.player)
             //this.$store.dispatch('setIsPlaying', true)
         })
 
         EventBus.$on('stop_song', () => {
             this.player.pauseVideo()
+            console.log('stop video')
             //this.$store.dispatch('setIsPlaying', true)
         })
     }
@@ -165,6 +172,107 @@ export default {
                 .vlm {
                     display: flex;
                     align-items: center;
+                    > span {
+                        margin-right: 5px;
+                    }
+                    input[type=range] {
+                        -webkit-appearance: none;
+                        width: 100%;
+                        margin: 4.7px 0;
+                    }
+
+                    input[type=range]:focus {
+                        outline: none;
+                    }
+
+                    input[type=range]::-webkit-slider-runnable-track {
+                        width: 100%;
+                        height: 12.6px;
+                        cursor: pointer;
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                        background: rgba(0, 0, 0, 0);
+                        border-radius: 6.2px;
+                        border: 0px solid rgba(0, 0, 0, 0);
+                    }
+
+                    input[type=range]::-webkit-slider-thumb {
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                        border: 1px solid #ffffff;
+                        height: 22px;
+                        width: 22px;
+                        border-radius: 50px;
+                        background: #e27171;
+                        cursor: pointer;
+                        -webkit-appearance: none;
+                        margin-top: -4.7px;
+                    }
+
+                    input[type=range]:focus::-webkit-slider-runnable-track {
+                        background: rgba(13, 13, 13, 0);
+                    }
+
+                    input[type=range]::-moz-range-track {
+                        width: 100%;
+                        height: 12.6px;
+                        cursor: pointer;
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                        background: rgba(0, 0, 0, 0);
+                        border-radius: 6.2px;
+                        border: 0px solid rgba(0, 0, 0, 0);
+                    }
+
+                    input[type=range]::-moz-range-thumb {
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                        border: 1px solid #ffffff;
+                        height: 22px;
+                        width: 22px;
+                        border-radius: 50px;
+                        background: #e27171;
+                        cursor: pointer;
+                    }
+
+                    input[type=range]::-ms-track {
+                        width: 100%;
+                        height: 12.6px;
+                        cursor: pointer;
+                        background: transparent;
+                        border-color: transparent;
+                        color: transparent;
+                    }
+
+                    input[type=range]::-ms-fill-lower {
+                        background: rgba(0, 0, 0, 0);
+                        border: 0px solid rgba(0, 0, 0, 0);
+                        border-radius: 12.4px;
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                    }
+
+                    input[type=range]::-ms-fill-upper {
+                        background: rgba(0, 0, 0, 0);
+                        border: 0px solid rgba(0, 0, 0, 0);
+                        border-radius: 12.4px;
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                    }
+
+                    input[type=range]::-ms-thumb {
+                        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px rgba(13, 13, 13, 0);
+                        border: 1px solid #ffffff;
+                        height: 22px;
+                        width: 22px;
+                        border-radius: 50px;
+                        background: #e27171;
+                        cursor: pointer;
+                        height: 12.6px;
+                    }
+
+                    input[type=range]:focus::-ms-fill-lower {
+                        background: rgba(0, 0, 0, 0);
+                    }
+
+                    input[type=range]:focus::-ms-fill-upper {
+                        background: rgba(13, 13, 13, 0);
+                    }
+
                     span:nth-child(1) {
                         i {
                             font-size: 1.4em;

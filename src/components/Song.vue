@@ -35,26 +35,32 @@ export default {
                 search_artist_and_name = this.song.track.artists[0].name + " " + this.song.track.name
             }
             
-            search(search_artist_and_name, opts, async (err, results) => {
-                if (err) return console.log(err);
-                // console.log(results[0].id)
-                await this.$store.dispatch('setCurrentSongId', results[0].id)
-                //set current_playing_song
-                await this.$store.dispatch('setCurrentPlayingSong', this.song)
-                //emit an event to play with the current id
+            let searchPromise = new Promise((resolve, reject) => {
+                search(search_artist_and_name, opts, (err, results) => {
+                    if (err) return console.log(err);
+                    // console.log(results[0].id)
+                    this.$store.dispatch('setCurrentSongId', results[0].id)
+                    //set current_playing_song
+                    this.$store.dispatch('setCurrentPlayingSong', this.song)
+                    //emit an event to play with the current id
+                })
+                resolve()
+            })
+            
+            searchPromise.then(async () => {
                 if (this.song.track.id === this.$store.state.current_playing.track.id) {
                     if (!this.$store.state.isPlaying) {
-                        this.$store.dispatch('setIsPlaying', true)
+                        await this.$store.dispatch('setIsPlaying', true)
                         EventBus.$emit('play_song')
                     } else {
-                        this.$store.dispatch('setIsPlaying', false)
+                        await this.$store.dispatch('setIsPlaying', false)
                         EventBus.$emit('stop_song')
                     }
                 } else {
-                    this.$store.dispatch('setIsPlaying', true)
+                    await this.$store.dispatch('setIsPlaying', true)
                     EventBus.$emit('play_song')
                 }
-            });
+            })
             
         }
     },

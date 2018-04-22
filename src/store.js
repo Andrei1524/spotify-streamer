@@ -8,7 +8,7 @@ export default new Vuex.Store({
     user: undefined,
     acces_token: undefined,
     latest_tracks: undefined,
-    current_song_id: "UceaB4D0jpo",
+    current_song_id: undefined,
     current_playing: undefined,
     isPlaying: false
   },
