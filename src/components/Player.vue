@@ -9,9 +9,9 @@
           </div>
 
           <div class="ctrls">
-              <span><i class="fas fa-step-backward"></i></span>
-              <span><i :class="isPlaying" @click="play_song"></i></span>
-              <span><i class="fas fa-step-forward" @click="nextSong"></i></span>
+              <span @click="previousSong"><i class="fas fa-step-backward"></i></span>
+              <span @click="play_song"><i :class="isPlaying"></i></span>
+              <span @click="nextSong"><i class="fas fa-step-forward"></i></span>
           </div>
         </div>
 
@@ -84,7 +84,7 @@ export default {
                     return
                 }
             })
-            
+
             let search = require('youtube-search');
 
             let opts = {
@@ -98,21 +98,55 @@ export default {
             } else {
                 currentSongIndex++
             }
-            
+
             let nextSong = this.$store.state.latest_tracks[currentSongIndex]
             //search this song by name and an artist
             let searchNextSong = nextSong.track.name + " " + nextSong.track.artists[0].name
-            
+
             search(searchNextSong, opts, (err, results) => {
-                    if (err) return console.log(err);
-                    
-                    this.$store.dispatch('setCurrentSongId', results[0].id)
-                    
-                    this.$store.dispatch('setCurrentPlayingSong', nextSong)
-                })
+                if (err) return console.log(err);
+
+                this.$store.dispatch('setCurrentSongId', results[0].id)
+
+                this.$store.dispatch('setCurrentPlayingSong', nextSong)
+            })
         },
         previousSong() {
+                        // find the current playing song id
+            let currentSongIndex
 
+            this.$store.state.latest_tracks.forEach((track, index) => {
+                if (track.track.id === this.$store.state.current_playing.track.id) {
+                    currentSongIndex = index
+                    return
+                }
+            })
+
+            let search = require('youtube-search');
+
+            let opts = {
+                maxResults: 3,
+                key: 'AIzaSyBm0KobFucNxOQYwZdhFG9mcCGIqSgVK-8'
+            };
+
+            // previous artist
+            if (this.$store.state.current_playing.track.id === this.$store.state.latest_tracks[0].track.id) {
+                currentSongIndex = this.$store.state.latest_tracks.length - 1
+            } else {
+                currentSongIndex--
+            }
+
+            let nextSong = this.$store.state.latest_tracks[currentSongIndex]
+            //search this song by name and an artist
+            let searchNextSong = nextSong.track.name + " " + nextSong.track.artists[0].name
+
+            search(searchNextSong, opts, (err, results) => {
+                if (err) return console.log(err);
+
+                this.$store.dispatch('setCurrentSongId', results[0].id)
+
+                this.$store.dispatch('setCurrentPlayingSong', nextSong)
+            })
         }
     },
     computed: {
