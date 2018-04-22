@@ -1,37 +1,57 @@
 <template>
-  <div class="player" v-if="this.$store.state.current_playing">
-      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready" :player-vars="{autoplay: 1}" @ended="ended" @playing="playing"></youtube>
-      <div class="player-up">
-        <div class="ctrls-sg-name-artist">
-          <div class="sg-name-artist">
-                <h2>{{ this.$store.state.current_playing.track.name }}</h2>
-                <h3>{{ getArtists }}</h3>
-          </div>
-
-          <div class="ctrls">
-              <span @click="previousSong"><i class="fas fa-step-backward"></i></span>
-              <span @click="play_song"><i :class="isPlaying"></i></span>
-              <span @click="nextSong"><i class="fas fa-step-forward"></i></span>
-          </div>
+    <div v-if="this.$store.state.current_playing">
+        <div class="youtube-player-embed" :style="showEmbed">
+            <span @click="show_embed_video = true ? show_embed_video === false : show_embed_video === true">show
+                <i class="fas fa-eye"></i>
+            </span>
+            <youtube class="video-player" :player-height="'50px'" :player-width="'100px'" :video-id="this.$store.state.current_song_id"
+                @ready="ready" :player-vars="{autoplay: 1}" @ended="ended" @playing="playing"></youtube>
         </div>
+        <div class="player">
+            <div class="player-up">
+                <div class="ctrls-sg-name-artist">
+                    <div class="sg-name-artist">
+                        <h2>{{ this.$store.state.current_playing.track.name }}</h2>
+                        <h3>{{ getArtists }}</h3>
+                    </div>
 
-        <div class="vlm-rpt-shfl">
-            <div class="rpt-shfl">
-                <span><i class="fas fa-redo"></i></span>
-                <span><i class="fas fa-random"></i></span>
+                    <div class="ctrls">
+                        <span @click="previousSong">
+                            <i class="fas fa-step-backward"></i>
+                        </span>
+                        <span @click="play_song">
+                            <i :class="isPlaying"></i>
+                        </span>
+                        <span @click="nextSong">
+                            <i class="fas fa-step-forward"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="vlm-rpt-shfl">
+                    <div class="rpt-shfl">
+                        <span>
+                            <i class="fas fa-redo"></i>
+                        </span>
+                        <span>
+                            <i class="fas fa-random"></i>
+                        </span>
+                    </div>
+
+                    <div class="vlm">
+                        <span>
+                            <i class="fas fa-volume-up"></i>
+                        </span>
+                        <input type="range" min="0" max="100" step="1" v-model="input_volume" v-on:change="changeVolume" class="vlm-indicator">
+                    </div>
+                </div>
             </div>
 
-            <div class="vlm">
-                <span><i class="fas fa-volume-up"></i></span>
-                <input type="range" min="0" max="100" step="1" v-model="input_volume" v-on:change="changeVolume" class="vlm-indicator">
+            <div class="song-where">
+                <input type="range" min="0" max="100" step="1" :value="player_duration" @change="changeDuration" :style="range_gr">
             </div>
         </div>
-      </div>
-
-      <div class="song-where">
-          <input type="range" min="0" max="100" step="1" :value="player_duration" @change="changeDuration" :style="range_gr">
-      </div>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -42,7 +62,8 @@ export default {
         return {
             input_volume: 100,
             player_duration: 0,
-            player_length_no_format_ms: undefined
+            player_length_no_format_ms: undefined,
+            show_embed_video: false
         }
     },
     methods: {
@@ -209,6 +230,17 @@ export default {
             return {
                 'background': 'linear-gradient(to right, #ffffff '+ this.player_duration + '%,#ffffff '+ this.player_duration + '%,#ffffff '+ this.player_duration + '%,#ffffff '+ this.player_duration + '%,#4f7993 '+ this.player_duration + '%,#a75252 '+ this.player_duration + '%)'
             }
+        },
+        showEmbed() {
+            if (this.show_embed_video) {
+                return {
+                    'bottom': '52px'
+                }
+            } else {
+                return {
+                    'bottom': '106px'
+                }
+            }
         }
     },
     mounted() {
@@ -227,11 +259,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.video-player {
-    height: 50px;
-    display: none;
-    iframe {
-        height: 50px;
+.youtube-player-embed {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 106px;
+    background: #e27171;
+    padding: 5px;
+    flex-direction: column;
+    z-index: 124;
+    left: 10px;
+    span {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        color: #FFF;
+        padding: 5px 10px;
+        background: #a55757;
+        border-radius: 4px;
+        font-weight: 300;
+        font-size: 14px;
+        cursor: pointer;
+        i {
+            margin-left: 5px;
+            color: #FFF;
+        }
+    }
+    .youtube-player{ 
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }
     .player {
@@ -242,6 +300,7 @@ export default {
         margin: 0 10px;
         background: #E27171;
         z-index: 1000;
+        box-shadow: 0 0 4px #0000006b;
         .player-up {
             display: flex;
             align-items: center;
