@@ -1,7 +1,7 @@
 <template>
-  <div class="song">
+  <div class="song" :data-songid="song.track.id">
       <div class="song-image">
-          <span @click="play"><i class="fas fa-play"></i></span>
+          <span @click="play"><i :class="isPlaying"></i></span>
       </div>
       <div class="song-info">
           <h3>{{ song.track.name }}</h3>
@@ -15,17 +15,18 @@ export default {
     props: ['song'],
     data() {
         return {
+            isSongPlaying: false
         }
     },
     methods: {
-        play() {
+        async play() {
             let search = require('youtube-search');
-            
+
             let opts = {
                 maxResults: 3,
                 key: 'AIzaSyBm0KobFucNxOQYwZdhFG9mcCGIqSgVK-8'
             };
-            
+
             let search_artist_and_name
 
             if (this.song.track.artists[1]) {
@@ -34,16 +35,52 @@ export default {
                 search_artist_and_name = this.song.track.artists[0].name + " " + this.song.track.name
             }
             
-            search(search_artist_and_name, opts, (err, results) => {
-                if(err) return console.log(err);
+            search(search_artist_and_name, opts, async (err, results) => {
+                if (err) return console.log(err);
                 // console.log(results[0].id)
-                this.$store.dispatch('setCurrentSongId', results[0].id)
-                
+                await this.$store.dispatch('setCurrentSongId', results[0].id)
+                //set current_playing_song
+                await this.$store.dispatch('setCurrentPlayingSong', this.song)
                 //emit an event to play with the current id
-                EventBus.$emit('play_song')
+                if (this.song.track.id === this.$store.state.current_playing.track.id) {
+                    if (!this.$store.state.isPlaying) {
+                        this.$store.dispatch('setIsPlaying', true)
+                        EventBus.$emit('play_song')
+                    } else {
+                        this.$store.dispatch('setIsPlaying', false)
+                        EventBus.$emit('stop_song')
+                    }
+                } else {
+                    this.$store.dispatch('setIsPlaying', true)
+                    EventBus.$emit('play_song')
+                }
             });
+            
         }
     },
+    computed: {
+        isPlaying() {
+            if (this.$store.state.current_playing && this.$store.state.isPlaying) {
+                if (this.song.track.id === this.$store.state.current_playing.track.id) {
+                    return {
+                        'fa fa-stop': true
+                    }
+                }
+                if (this.song.track.id !== this.$store.state.current_playing.track.id) {
+                    return {
+                        'fa fa-play': true
+                    }
+                }
+            } else {
+                return {
+                    'fa fa-play': true
+                }
+            }
+
+        }
+    },
+    mounted() {
+    }
 }
 </script>
 

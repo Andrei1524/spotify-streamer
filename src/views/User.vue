@@ -28,7 +28,9 @@ export default {
                     }
             })
         // this.latest_tracks = latest_tracks.data.items
-        this.$store.dispatch('setLatestTracks', latest_tracks.data.items)
+        await this.$store.dispatch('setLatestTracks', latest_tracks.data.items)
+        this.$store.dispatch('setCurrentPlayingSong', latest_tracks.data.items[0])
+        console.log(latest_tracks)
     },
     components: {
         'app-user-menu': UserMenu,

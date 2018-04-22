@@ -8,7 +8,9 @@ export default new Vuex.Store({
     user: undefined,
     acces_token: undefined,
     latest_tracks: undefined,
-    current_song_id: undefined
+    current_song_id: "UceaB4D0jpo",
+    current_playing: undefined,
+    isPlaying: false
   },
   mutations: {
     setAccesToken(state, payload) {
@@ -22,6 +24,12 @@ export default new Vuex.Store({
     },
     setCurrentSongId(state, payload) {
       state.current_song_id = payload
+    },
+    setCurrentPlayingSong(state, payload) {
+      state.current_playing = payload
+    },
+    setIsPlaying(state, payload) {
+      state.isPlaying = payload
     }
   },
   actions: {
@@ -36,6 +44,12 @@ export default new Vuex.Store({
     },
     setCurrentSongId({commit}, payload) {
       commit('setCurrentSongId', payload)
+    },
+    setCurrentPlayingSong({commit}, payload) {
+      commit('setCurrentPlayingSong', payload)
+    },
+    setIsPlaying({commit}, payload) {
+      commit('setIsPlaying', payload)
     }
   }
 })

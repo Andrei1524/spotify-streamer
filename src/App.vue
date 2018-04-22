@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <app-home></app-home>
+    <app-player></app-player>
   </div>
 </template>
 
 <script>
 import Home from './views/Home'
+import Player from './components/Player'
 export default {
   data() {
     return {
@@ -13,7 +15,8 @@ export default {
     }
   },
   components: {
-    'app-home': Home
+    'app-home': Home,
+    'app-player': Player
   }
 }
 </script>
