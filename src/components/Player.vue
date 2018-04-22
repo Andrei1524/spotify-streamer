@@ -1,6 +1,6 @@
 <template>
   <div class="player" v-if="this.$store.state.current_playing">
-      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready" :player-vars="{autoplay: 1}"></youtube>
+      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready" :player-vars="{autoplay: 1}" @ended="ended"></youtube>
       <div class="player-up">
         <div class="ctrls-sg-name-artist">
           <div class="sg-name-artist">
@@ -54,6 +54,9 @@ export default {
             // If you would like to change `playerVars`, please change it before you change `videoId`.
             // If `playerVars.autoplay` is 1, `loadVideoById` will be called.
             // If `playerVars.autoplay` is 0, `cueVideoById` will be called.
+        },
+        ended() {
+            this.nextSong()
         },
         stop() {
             this.player.stopVideo()
@@ -110,6 +113,7 @@ export default {
 
                 this.$store.dispatch('setCurrentPlayingSong', nextSong)
             })
+            this.$store.dispatch('setIsPlaying', true)
         },
         previousSong() {
                         // find the current playing song id
@@ -147,6 +151,7 @@ export default {
 
                 this.$store.dispatch('setCurrentPlayingSong', nextSong)
             })
+            this.$store.dispatch('setIsPlaying', true)
         }
     },
     computed: {
