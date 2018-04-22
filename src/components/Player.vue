@@ -1,6 +1,6 @@
 <template>
   <div class="player" v-if="this.$store.state.current_playing">
-      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready" :player-vars="{autoplay: 1}" @ended="ended"></youtube>
+      <youtube class="video-player" :video-id="this.$store.state.current_song_id" @ready="ready" :player-vars="{autoplay: 1}" @ended="ended" @playing="playing"></youtube>
       <div class="player-up">
         <div class="ctrls-sg-name-artist">
           <div class="sg-name-artist">
@@ -29,17 +29,20 @@
       </div>
 
       <div class="song-where">
-          <span></span>
+          <input type="range" min="0" max="100" step="1" :value="player_duration" @change="changeDuration" :style="range_gr">
       </div>
   </div>
 </template>
 
 <script>
 import { EventBus } from '../event-bus'
+import moment from 'moment'
 export default {
     data() {
         return {
-            input_volume: 100
+            input_volume: 100,
+            player_duration: 0,
+            player_length_no_format_ms: undefined
         }
     },
     methods: {
@@ -48,6 +51,24 @@ export default {
         },
         playing(player) {
             // The player is playing a video.
+            console.log(player.getDuration())
+            console.log(player.getCurrentTime())
+
+
+                setInterval(async () => {
+                    let ms = this.player.getCurrentTime()
+                    let mom
+                    let seconds = new Date(ms).getTime()
+                    let secondsPassed = moment('1900-01-01 00:00:00').add(seconds, 'seconds').format('m:ss')
+                    // this.player.setVolume(this.player_volume)
+                    let videoLengthMs = this.player.getDuration()
+                    let videoLength = this.player.getDuration() - seconds
+                    let videoLengthSeconds = moment('1900-01-01 00:00:00').add(videoLength, 'seconds').format('m:ss')
+                    let line_percentage = Math.round((ms / videoLengthMs) * 100)
+                    
+                    this.player_length_no_format_ms = videoLengthMs
+                    this.player_duration = line_percentage
+                }, 1000)
         },
         change() {
             // when you change the value, the player will also change.
@@ -74,8 +95,13 @@ export default {
                 this.$store.dispatch('setIsPlaying', false)
             }
         },
-        changeVolume() {
+        changeVolume(e) {
             this.player.setVolume(this.input_volume)
+        },
+        changeDuration(e) {
+            // this.player.pauseVideo()
+            this.player_duration = e.target.value
+            this.player.seekTo(this.player_length_no_format_ms * (e.target.value / 100))
         },
         nextSong() {
             // find the current playing song id
@@ -178,19 +204,22 @@ export default {
                     'fa fa-play':  true
                 }
             }
+        },
+        range_gr() {
+            return {
+                'background': 'linear-gradient(to right, #ffffff '+ this.player_duration + '%,#ffffff '+ this.player_duration + '%,#ffffff '+ this.player_duration + '%,#ffffff '+ this.player_duration + '%,#4f7993 '+ this.player_duration + '%,#a75252 '+ this.player_duration + '%)'
+            }
         }
     },
     mounted() {
         this.ready()
         EventBus.$on('play_song', () => {
             this.player.playVideo()
-            console.log(this.player)
             //this.$store.dispatch('setIsPlaying', true)
         })
 
         EventBus.$on('stop_song', () => {
             this.player.pauseVideo()
-            console.log('stop video')
             //this.$store.dispatch('setIsPlaying', true)
         })
     }
@@ -200,7 +229,7 @@ export default {
 <style lang="scss" scoped>
 .video-player {
     height: 50px;
-
+    display: none;
     iframe {
         height: 50px;
     }
@@ -370,12 +399,85 @@ export default {
             }
         }
         .song-where {
-            span {
+            input {
                 display: block;
                 width: 100%;
-                background: #FFF;
+                // background: #FFF;
                 height: 10px;
+                margin: 0;
             }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 0px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0px;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+}
+input[type=range]::-webkit-slider-thumb {
+  height: 0px;
+  width: 0px;
+  border-radius: 0px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -0.7px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: rgba(92, 92, 92, 0);
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+}
+input[type=range]::-moz-range-thumb {
+  height: 0px;
+  width: 0px;
+  border-radius: 0px;
+  background: #ffffff;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 32px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+}
+input[type=range]::-ms-fill-upper {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 0px;
+}
+input[type=range]::-ms-thumb {
+  width: 0px;
+  border-radius: 0px;
+  background: #ffffff;
+  cursor: pointer;
+  height: 0px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: rgba(0, 0, 0, 0);
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: rgba(92, 92, 92, 0);
+}
+
         }
         .ctrls {
             display: flex;

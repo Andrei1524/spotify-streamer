@@ -1,7 +1,7 @@
 <template>
   <div class="song" :data-songid="song.track.id">
-      <div class="song-image">
-          <span @click="play"><i :class="isPlaying"></i></span>
+      <div class="song-image" @click="play">
+          <span><i :class="isPlaying"></i></span>
       </div>
       <div class="song-info">
           <h3>{{ song.track.name }}</h3>
@@ -121,10 +121,10 @@ export default {
     min-width: 50px;
     min-height: 50px;
     z-index: 100;
+    cursor: pointer;
     span {
         display: block;
         color: #FFF;
-        cursor: pointer;
         i {
             font-size: 1.6em;
         }
