@@ -1,4 +1,5 @@
 # spotify-streamer
+#### created for my personal use
 Sync your liked songs and play / download them on the phone, web.
 
 ### Live test
