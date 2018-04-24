@@ -6,9 +6,9 @@ Sync your liked songs and play / download them on the phone, web.
 ## https://spotify-streamer.herokuapp.com/#/
 
 # Login Page
-![login-page](https://i.imgur.com/7iUw7k8.png)
+![login-page](https://i.imgur.com/PTeWt5B.png)
 
 
 # Liked songs from spotify
 
-![songs](https://i.imgur.com/CssZyPu.png)
+![songs](https://i.imgur.com/pK9nlC2.png)
