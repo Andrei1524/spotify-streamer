@@ -1,7 +1,7 @@
 <template>
   <div>
      <div class="greet">
-         <h1>Hello, <span>{{ this.$store.state.user.display_name }}</span></h1>
+         <h1>Hello, <span>{{ this.$store.state.user.id }}</span></h1>
      </div>
     
     <div class="user-menu_latest-songs-wrapper">

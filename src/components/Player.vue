@@ -1,7 +1,7 @@
 <template>
     <div v-if="this.$store.state.current_playing">
         <div class="youtube-player-embed" :style="showEmbed">
-            <span @click="show_embed_video = true ? show_embed_video === false : show_embed_video === true">show
+            <span @click="show_embed_video = !show_embed_video">show
                 <i class="fas fa-eye"></i>
             </span>
             <youtube class="video-player" :player-height="'50px'" :player-width="'100px'" :video-id="this.$store.state.current_song_id"
@@ -74,8 +74,6 @@ export default {
             // The player is playing a video.
             console.log(player.getDuration())
             console.log(player.getCurrentTime())
-
-
                 setInterval(async () => {
                     let ms = this.player.getCurrentTime()
                     let mom
@@ -232,7 +230,7 @@ export default {
             }
         },
         showEmbed() {
-            if (this.show_embed_video) {
+            if (!this.show_embed_video) {
                 return {
                     'bottom': '52px'
                 }
@@ -466,76 +464,88 @@ export default {
                 margin: 0;
             }
 
-input[type=range] {
-  -webkit-appearance: none;
-  width: 100%;
-  margin: 0px 0;
-}
-input[type=range]:focus {
-  outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 0px;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0);
-  border-radius: 0px;
-}
-input[type=range]::-webkit-slider-thumb {
-  height: 0px;
-  width: 0px;
-  border-radius: 0px;
-  background: #ffffff;
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: -0.7px;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
-  background: rgba(92, 92, 92, 0);
-}
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 32px;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0);
-  border-radius: 0px;
-}
-input[type=range]::-moz-range-thumb {
-  height: 0px;
-  width: 0px;
-  border-radius: 0px;
-  background: #ffffff;
-  cursor: pointer;
-}
-input[type=range]::-ms-track {
-  width: 100%;
-  height: 32px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-input[type=range]::-ms-fill-lower {
-  background: rgba(0, 0, 0, 0);
-  border-radius: 0px;
-}
-input[type=range]::-ms-fill-upper {
-  background: rgba(0, 0, 0, 0);
-  border-radius: 0px;
-}
-input[type=range]::-ms-thumb {
-  width: 0px;
-  border-radius: 0px;
-  background: #ffffff;
-  cursor: pointer;
-  height: 0px;
-}
-input[type=range]:focus::-ms-fill-lower {
-  background: rgba(0, 0, 0, 0);
-}
-input[type=range]:focus::-ms-fill-upper {
-  background: rgba(92, 92, 92, 0);
-}
+            input[type=range] {
+                -webkit-appearance: none;
+                width: 100%;
+                margin: 0px 0;
+            }
+
+            input[type=range]:focus {
+                outline: none;
+            }
+
+            input[type=range]::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 0px;
+                cursor: pointer;
+                background: rgba(0, 0, 0, 0);
+                border-radius: 0px;
+            }
+
+            input[type=range]::-webkit-slider-thumb {
+                height: 0px;
+                width: 0px;
+                border-radius: 0px;
+                background: #ffffff;
+                cursor: pointer;
+                -webkit-appearance: none;
+                margin-top: -0.7px;
+            }
+
+            input[type=range]:focus::-webkit-slider-runnable-track {
+                background: rgba(92, 92, 92, 0);
+            }
+
+            input[type=range]::-moz-range-track {
+                width: 100%;
+                height: 32px;
+                cursor: pointer;
+                background: rgba(0, 0, 0, 0);
+                border-radius: 0px;
+            }
+
+            input[type=range]::-moz-range-thumb {
+                height: 0px;
+                width: 0px;
+                border-radius: 0px;
+                background: #ffffff;
+                cursor: pointer;
+            }
+
+            input[type=range]::-ms-track {
+                width: 100%;
+                height: 32px;
+                cursor: pointer;
+                background: transparent;
+                border-color: transparent;
+                color: transparent;
+            }
+
+            input[type=range]::-ms-fill-lower {
+                background: rgba(0, 0, 0, 0);
+                border-radius: 0px;
+            }
+
+            input[type=range]::-ms-fill-upper {
+                background: rgba(0, 0, 0, 0);
+                border-radius: 0px;
+            }
+
+            input[type=range]::-ms-thumb {
+                width: 0px;
+                border-radius: 0px;
+                background: #ffffff;
+                cursor: pointer;
+                height: 0px;
+            }
+
+            input[type=range]:focus::-ms-fill-lower {
+                background: rgba(0, 0, 0, 0);
+            }
+
+            input[type=range]:focus::-ms-fill-upper {
+                background: rgba(92, 92, 92, 0);
+            }
 
         }
         .ctrls {
